@@ -22,7 +22,7 @@ public class MainMenuUI : MonoBehaviour
     public Button logoutButton;
 
     [Header("Escena a cargar al jugar")]
-    public string gameSceneName = "Dia Dos";
+    public string gameSceneName = "dia2";
 
     // ──────────────────────────────────────────────────────────────────────
     void Start()

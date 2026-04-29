@@ -179,7 +179,7 @@ public class GameManager : MonoBehaviour
     void GoToNextScene()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Dia Dos");
+        SceneManager.LoadScene("Menu");
     }
 
     void SetStatus(string msg)

@@ -16,7 +16,6 @@ public class PauseMenu : MonoBehaviour
 
     [Header("Botones")]
     public Button continueButton;
-    public Button saveButton;
     public Button mainMenuButton;
 
     [Header("Feedback")]
@@ -34,7 +33,6 @@ public class PauseMenu : MonoBehaviour
         pausePanel.SetActive(false);
 
         continueButton.onClick.AddListener(Continue);
-        saveButton.onClick.AddListener(SaveGame);
         mainMenuButton.onClick.AddListener(GoToMainMenu);
     }
 
@@ -69,24 +67,6 @@ public class PauseMenu : MonoBehaviour
         pausePanel.SetActive(false);
     }
 
-    // ── Guardar puntaje actual ────────────────────────────────────────────
-    void SaveGame()
-    {
-        if (UserManager.Instance == null || UserManager.Instance.CurrentUser == null)
-        {
-            feedbackText.text = "Error: no hay usuario activo.";
-            return;
-        }
-
-        if (gameManager == null)
-        {
-            feedbackText.text = "Error: no se encontro el GameManager.";
-            return;
-        }
-
-        UserManager.Instance.SaveCurrentScore(gameManager.currentScore);
-        feedbackText.text = "Partida guardada! Puntaje: " + gameManager.currentScore;
-    }
 
     // ── Volver al menu principal ──────────────────────────────────────────
     void GoToMainMenu()

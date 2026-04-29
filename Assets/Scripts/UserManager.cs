@@ -77,6 +77,9 @@ public class UserManager : MonoBehaviour
         CurrentUser.SaveScore(score, minigameName);
         SaveToFile();
         Debug.Log($"[UserManager] Puntaje guardado: {score} en {minigameName} para {CurrentUser.username}");
+
+        // Log de las ultimas partidas desde la pila
+        LogScoreHistory(CurrentUser);
     }
 
     // ── Cerrar sesion ─────────────────────────────────────────────────────
@@ -143,13 +146,49 @@ public class UserManager : MonoBehaviour
                     }
                 }
 
+                // Reconstruir la pila de historial desde el JSON
+                if (u.scoreHistory != null)
+                {
+                    userData.scoreHistory = new ScoreStack(10);
+                    // Los elementos vienen del tope al fondo; los insertamos al reves
+                    // para que la pila quede en el orden correcto.
+                    for (int i = u.scoreHistory.Length - 1; i >= 0; i--)
+                    {
+                        var entry = u.scoreHistory[i];
+                        userData.scoreHistory.Push(entry.score, entry.minigameName, entry.date);
+                    }
+                }
+
                 userList.Add(userData);
             }
             Debug.Log("[UserManager] " + userList.Count() + " usuarios cargados.");
         }
     }
 
+    // ── Helper de debug: imprime el historial de la pila ─────────────────
+    private void LogScoreHistory(UserData user)
+    {
+        if (user.scoreHistory == null || user.scoreHistory.IsEmpty()) return;
+
+        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+        sb.AppendLine($"[UserManager] Historial de partidas de {user.username} (tope primero):");
+
+        ScoreHistoryNode[] history = user.scoreHistory.ToArray();
+        for (int i = 0; i < history.Length; i++)
+            sb.AppendLine($"  {i + 1}. {history[i].minigameName} — {history[i].score} pts — {history[i].date}");
+
+        Debug.Log(sb.ToString());
+    }
+
     // ── Clases serializables para JsonUtility ─────────────────────────────
+    [System.Serializable]
+    private class ScoreHistoryEntrySerializable
+    {
+        public int    score;
+        public string minigameName;
+        public string date;
+    }
+
     [System.Serializable]
     private class MiniGameRecordSerializable
     {
@@ -167,7 +206,8 @@ public class UserManager : MonoBehaviour
         public int    gamesPlayed;
         public string lastPlayed;
         public int    globalScore;
-        public MiniGameRecordSerializable[] miniGameRecords;
+        public MiniGameRecordSerializable[]    miniGameRecords;
+        public ScoreHistoryEntrySerializable[] scoreHistory;   // pila serializada
     }
 
     [System.Serializable]
@@ -184,6 +224,7 @@ public class UserManager : MonoBehaviour
 
         for (int i = 0; i < arr.Length; i++)
         {
+            // Serializar registros de minijuegos
             var mgRecords = new MiniGameRecordSerializable[arr[i].miniGameRecords.Count];
             for (int j = 0; j < arr[i].miniGameRecords.Count; j++)
             {
@@ -195,6 +236,23 @@ public class UserManager : MonoBehaviour
                 };
             }
 
+            // Serializar la pila de historial (tope primero)
+            ScoreHistoryEntrySerializable[] historyArr = null;
+            if (arr[i].scoreHistory != null)
+            {
+                ScoreHistoryNode[] nodes = arr[i].scoreHistory.ToArray();
+                historyArr = new ScoreHistoryEntrySerializable[nodes.Length];
+                for (int k = 0; k < nodes.Length; k++)
+                {
+                    historyArr[k] = new ScoreHistoryEntrySerializable
+                    {
+                        score        = nodes[k].score,
+                        minigameName = nodes[k].minigameName,
+                        date         = nodes[k].date
+                    };
+                }
+            }
+
             result[i] = new UserDataSerializable
             {
                 username        = arr[i].username,
@@ -203,7 +261,8 @@ public class UserManager : MonoBehaviour
                 gamesPlayed     = arr[i].gamesPlayed,
                 lastPlayed      = arr[i].lastPlayed,
                 globalScore     = arr[i].globalScore,
-                miniGameRecords = mgRecords
+                miniGameRecords = mgRecords,
+                scoreHistory    = historyArr
             };
         }
 
