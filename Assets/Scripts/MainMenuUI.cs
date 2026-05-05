@@ -93,7 +93,7 @@ public class MainMenuUI : MonoBehaviour
         else
             loginFeedbackText.text = "Nuevo usuario registrado!";
 
-        Invoke(nameof(ShowWelcomePanel), 0.8f);
+        Invoke(nameof(ShowWelcomePanel), 0.8f);// Esperar un momento para mostrar el mensaje antes de cambiar de panel
     }
 
     // ── Iniciar juego ─────────────────────────────────────────────────────

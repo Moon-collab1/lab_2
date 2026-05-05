@@ -27,12 +27,12 @@ public class UserLinkedList
         else
         {
             UserNode current = head;
-            while (current.next != null)
+            while (current.next != null)// Recorremos hasta el final
                 current = current.next;
             current.next = newNode;
         }
 
-        size++;
+        size++;// Incrementamos el tamaño de la lista
     }
 
     // ── Buscar usuario por nombre ──────────────────────────────────────────
@@ -99,7 +99,7 @@ public class UserLinkedList
     }
 
     // ── Construir lista desde array (al cargar desde JSON) ─────────────────
-    public void FromArray(UserData[] arr)
+    public void FromArray(UserData[] arr)// Reinicia la lista y agrega cada usuario del array
     {
         head = null;
         size = 0;
@@ -144,7 +144,7 @@ public class UserLinkedList
     // ══════════════════════════════════════════════════════════════════════
     public UserData[] GetTopByMiniGame(string minigameName, int top = 10)
     {
-        UserData[] arr = ToArray();
+        UserData[] arr = ToArray();// Convertimos la lista a array para ordenar
 
         // Bubble sort descendente por score acumulado del minijuego
         for (int i = 0; i < arr.Length - 1; i++)

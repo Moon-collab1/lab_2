@@ -1,0 +1,330 @@
+{
+    "capacity": 64,
+    "count": 7,
+    "loadFactor": 0.109375,
+    "usedBuckets": 7,
+    "emptyBuckets": 57,
+    "maxChainLength": 1,
+    "avgChainLength": 1.0,
+    "buckets": [
+        {
+            "index": 0,
+            "chain": []
+        },
+        {
+            "index": 1,
+            "chain": []
+        },
+        {
+            "index": 2,
+            "chain": []
+        },
+        {
+            "index": 3,
+            "chain": []
+        },
+        {
+            "index": 4,
+            "chain": []
+        },
+        {
+            "index": 5,
+            "chain": []
+        },
+        {
+            "index": 6,
+            "chain": []
+        },
+        {
+            "index": 7,
+            "chain": []
+        },
+        {
+            "index": 8,
+            "chain": []
+        },
+        {
+            "index": 9,
+            "chain": []
+        },
+        {
+            "index": 10,
+            "chain": []
+        },
+        {
+            "index": 11,
+            "chain": []
+        },
+        {
+            "index": 12,
+            "chain": [
+                {
+                    "username": "Samuel",
+                    "highScore": 55,
+                    "globalScore": 182,
+                    "gamesPlayed": 12,
+                    "lastPlayed": "2026-04-29 03:19",
+                    "hashValue": 12
+                }
+            ]
+        },
+        {
+            "index": 13,
+            "chain": []
+        },
+        {
+            "index": 14,
+            "chain": []
+        },
+        {
+            "index": 15,
+            "chain": []
+        },
+        {
+            "index": 16,
+            "chain": []
+        },
+        {
+            "index": 17,
+            "chain": []
+        },
+        {
+            "index": 18,
+            "chain": []
+        },
+        {
+            "index": 19,
+            "chain": []
+        },
+        {
+            "index": 20,
+            "chain": [
+                {
+                    "username": "Sarah",
+                    "highScore": 17,
+                    "globalScore": 30,
+                    "gamesPlayed": 2,
+                    "lastPlayed": "2026-04-28 19:34",
+                    "hashValue": 20
+                }
+            ]
+        },
+        {
+            "index": 21,
+            "chain": []
+        },
+        {
+            "index": 22,
+            "chain": []
+        },
+        {
+            "index": 23,
+            "chain": []
+        },
+        {
+            "index": 24,
+            "chain": [
+                {
+                    "username": "Dan",
+                    "highScore": 41,
+                    "globalScore": 41,
+                    "gamesPlayed": 1,
+                    "lastPlayed": "2026-05-05 15:58",
+                    "hashValue": 24
+                }
+            ]
+        },
+        {
+            "index": 25,
+            "chain": []
+        },
+        {
+            "index": 26,
+            "chain": []
+        },
+        {
+            "index": 27,
+            "chain": []
+        },
+        {
+            "index": 28,
+            "chain": []
+        },
+        {
+            "index": 29,
+            "chain": []
+        },
+        {
+            "index": 30,
+            "chain": [
+                {
+                    "username": "usuario 1",
+                    "highScore": 17,
+                    "globalScore": 17,
+                    "gamesPlayed": 1,
+                    "lastPlayed": "2026-04-27 14:26",
+                    "hashValue": 30
+                }
+            ]
+        },
+        {
+            "index": 31,
+            "chain": []
+        },
+        {
+            "index": 32,
+            "chain": []
+        },
+        {
+            "index": 33,
+            "chain": []
+        },
+        {
+            "index": 34,
+            "chain": []
+        },
+        {
+            "index": 35,
+            "chain": []
+        },
+        {
+            "index": 36,
+            "chain": []
+        },
+        {
+            "index": 37,
+            "chain": []
+        },
+        {
+            "index": 38,
+            "chain": [
+                {
+                    "username": "Sam",
+                    "highScore": 53,
+                    "globalScore": 213,
+                    "gamesPlayed": 13,
+                    "lastPlayed": "2026-05-05 15:48",
+                    "hashValue": 38
+                }
+            ]
+        },
+        {
+            "index": 39,
+            "chain": []
+        },
+        {
+            "index": 40,
+            "chain": []
+        },
+        {
+            "index": 41,
+            "chain": []
+        },
+        {
+            "index": 42,
+            "chain": []
+        },
+        {
+            "index": 43,
+            "chain": []
+        },
+        {
+            "index": 44,
+            "chain": [
+                {
+                    "username": "Mathias",
+                    "highScore": 0,
+                    "globalScore": 0,
+                    "gamesPlayed": 0,
+                    "lastPlayed": "2026-04-27 10:56",
+                    "hashValue": 44
+                }
+            ]
+        },
+        {
+            "index": 45,
+            "chain": []
+        },
+        {
+            "index": 46,
+            "chain": []
+        },
+        {
+            "index": 47,
+            "chain": []
+        },
+        {
+            "index": 48,
+            "chain": []
+        },
+        {
+            "index": 49,
+            "chain": []
+        },
+        {
+            "index": 50,
+            "chain": [
+                {
+                    "username": "Daniel",
+                    "highScore": 19,
+                    "globalScore": 25,
+                    "gamesPlayed": 3,
+                    "lastPlayed": "2026-04-27 10:15",
+                    "hashValue": 50
+                }
+            ]
+        },
+        {
+            "index": 51,
+            "chain": []
+        },
+        {
+            "index": 52,
+            "chain": []
+        },
+        {
+            "index": 53,
+            "chain": []
+        },
+        {
+            "index": 54,
+            "chain": []
+        },
+        {
+            "index": 55,
+            "chain": []
+        },
+        {
+            "index": 56,
+            "chain": []
+        },
+        {
+            "index": 57,
+            "chain": []
+        },
+        {
+            "index": 58,
+            "chain": []
+        },
+        {
+            "index": 59,
+            "chain": []
+        },
+        {
+            "index": 60,
+            "chain": []
+        },
+        {
+            "index": 61,
+            "chain": []
+        },
+        {
+            "index": 62,
+            "chain": []
+        },
+        {
+            "index": 63,
+            "chain": []
+        }
+    ]
+}

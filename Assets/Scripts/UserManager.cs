@@ -4,6 +4,12 @@ using System.IO;
 /// <summary>
 /// Singleton que maneja la lista enlazada de usuarios y la persistencia en JSON.
 /// Persiste entre escenas con DontDestroyOnLoad.
+///
+/// TABLA HASH:
+///   - Se usa para Login/Registro: busqueda O(1) en vez de O(n) con la lista.
+///   - Se sincroniza automaticamente al guardar y al cargar.
+///   - Requiere que UserHashTable este presente en la escena (mismo GameObject
+///     o uno separado). Si no existe, el Login cae en fallback a la lista enlazada.
 /// </summary>
 public class UserManager : MonoBehaviour
 {
@@ -11,7 +17,7 @@ public class UserManager : MonoBehaviour
 
     // ── Nombres de minijuegos (constantes para usar en GameManager) ────────
     public const string MINIJUEGO_1 = "Minijuego1";
-    // public const string MINIJUEGO_2 = "Minijuego2"; // agrega mas cuando los tengas
+    // public const string MINIJUEGO_2 = "Minijuego2";
 
     // ── Lista enlazada de usuarios ─────────────────────────────────────────
     private UserLinkedList userList = new UserLinkedList();
@@ -34,38 +40,69 @@ public class UserManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        filePath = Path.Combine(Application.persistentDataPath, "usuarios.json");
+        filePath = Path.Combine("C:/Users/samue/proyectos unity/Experimentode lab2/Assets/Datos", "usuarios.json");
         LoadFromFile();
     }
 
-    // ── Login o registro ──────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // LOGIN / REGISTRO — usa la tabla hash para busqueda O(1)
+    // ══════════════════════════════════════════════════════════════════════
+
     /// <summary>
     /// Intenta loguear un usuario existente o crea uno nuevo.
     /// Retorna true si el usuario ya existia, false si es nuevo.
+    ///
+    /// Busqueda: primero intenta O(1) en la tabla hash;
+    /// si la tabla no esta disponible cae en O(n) en la lista enlazada.
     /// </summary>
     public bool LoginOrRegister(string username)
     {
         username = username.Trim();
         if (string.IsNullOrEmpty(username)) return false;
 
+        // ── Busqueda en tabla hash O(1) ────────────────────────────────────
+        UserData found = HashSearch(username);
+
+        if (found != null)
+        {
+            CurrentUser = found;
+            Debug.Log("[UserManager] (HashTable hit) Usuario cargado: " + CurrentUser.GetSummary());
+            return true;
+        }
+
+        // ── Fallback: busqueda en lista enlazada O(n) ──────────────────────
         if (userList.Exists(username))
         {
             CurrentUser = userList.Find(username);
-            Debug.Log("[UserManager] Usuario existente cargado: " + CurrentUser.GetSummary());
+            Debug.Log("[UserManager] (LinkedList fallback) Usuario cargado: " + CurrentUser.GetSummary());
             return true;
         }
-        else
-        {
-            UserData newUser = new UserData(username);
-            userList.Add(newUser);
-            CurrentUser = newUser;
-            SaveToFile();
-            Debug.Log("[UserManager] Nuevo usuario registrado: " + username);
-            return false;
-        }
+
+        // ── Usuario nuevo ──────────────────────────────────────────────────
+        UserData newUser = new UserData(username);
+        userList.Add(newUser);
+        CurrentUser = newUser;
+
+        // Insertar directamente en la tabla hash sin reconstruirla entera
+        if (UserHashTable.Instance != null)
+            UserHashTable.Instance.Insert(username, newUser);
+
+        SaveToFile();
+        Debug.Log("[UserManager] Nuevo usuario registrado: " + username);
+        return false;
     }
 
-    // ── Guardar puntaje del usuario actual ────────────────────────────────
+    // ── Busqueda auxiliar en tabla hash ────────────────────────────────────
+    private UserData HashSearch(string username)
+    {
+        if (UserHashTable.Instance == null) return null;
+        return UserHashTable.Instance.Search(username);
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
+    // GUARDAR PUNTAJE
+    // ══════════════════════════════════════════════════════════════════════
+
     /// <summary>
     /// Guarda el score de la partida actual.
     /// minigameName: usa UserManager.MINIJUEGO_1 (o la constante del minijuego).
@@ -75,32 +112,44 @@ public class UserManager : MonoBehaviour
         if (CurrentUser == null) return;
 
         CurrentUser.SaveScore(score, minigameName);
+
+        // Actualizar entrada en la tabla hash (el objeto ya esta referenciado,
+        // pero llamamos Insert para asegurar que el puntero es el correcto)
+        if (UserHashTable.Instance != null)
+            UserHashTable.Instance.Insert(CurrentUser.username, CurrentUser);
+
         SaveToFile();
         Debug.Log($"[UserManager] Puntaje guardado: {score} en {minigameName} para {CurrentUser.username}");
-
-        // Log de las ultimas partidas desde la pila
         LogScoreHistory(CurrentUser);
     }
 
-    // ── Cerrar sesion ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // CERRAR SESION
+    // ══════════════════════════════════════════════════════════════════════
+
     public void Logout()
     {
         CurrentUser = null;
     }
 
-    // ── Leaderboard: top global ───────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // LEADERBOARD
+    // ══════════════════════════════════════════════════════════════════════
+
     public UserData[] GetTopGlobal(int top = 10)
     {
         return userList.GetTopByGlobalScore(top);
     }
 
-    // ── Leaderboard: top por minijuego ────────────────────────────────────
     public UserData[] GetTopByMiniGame(string minigameName, int top = 10)
     {
         return userList.GetTopByMiniGame(minigameName, top);
     }
 
-    // ── Guardar lista en JSON ─────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // PERSISTENCIA JSON
+    // ══════════════════════════════════════════════════════════════════════
+
     public void SaveToFile()
     {
         UserDataSerializable[] serializableUsers = ToSerializableArray();
@@ -108,9 +157,12 @@ public class UserManager : MonoBehaviour
         string json = JsonUtility.ToJson(wrapper, prettyPrint: true);
         File.WriteAllText(filePath, json);
         Debug.Log("[UserManager] Guardado en: " + filePath);
+
+        // Reconstruir tabla hash completa al guardar
+        if (UserHashTable.Instance != null)
+            UserHashTable.Instance.Rebuild(userList.ToArray());
     }
 
-    // ── Cargar lista desde JSON ───────────────────────────────────────────
     public void LoadFromFile()
     {
         if (!File.Exists(filePath))
@@ -127,14 +179,13 @@ public class UserManager : MonoBehaviour
             userList = new UserLinkedList();
             foreach (var u in wrapper.users)
             {
-                UserData userData       = new UserData(u.username);
-                userData.highScore      = u.highScore;
-                userData.lastScore      = u.lastScore;
-                userData.gamesPlayed    = u.gamesPlayed;
-                userData.lastPlayed     = u.lastPlayed;
-                userData.globalScore    = u.globalScore;
+                UserData userData    = new UserData(u.username);
+                userData.highScore   = u.highScore;
+                userData.lastScore   = u.lastScore;
+                userData.gamesPlayed = u.gamesPlayed;
+                userData.lastPlayed  = u.lastPlayed;
+                userData.globalScore = u.globalScore;
 
-                // Cargar registros de minijuegos
                 if (u.miniGameRecords != null)
                 {
                     foreach (var r in u.miniGameRecords)
@@ -146,12 +197,10 @@ public class UserManager : MonoBehaviour
                     }
                 }
 
-                // Reconstruir la pila de historial desde el JSON
+                // Reconstruir pila de historial desde JSON
                 if (u.scoreHistory != null)
                 {
                     userData.scoreHistory = new ScoreStack(10);
-                    // Los elementos vienen del tope al fondo; los insertamos al reves
-                    // para que la pila quede en el orden correcto.
                     for (int i = u.scoreHistory.Length - 1; i >= 0; i--)
                     {
                         var entry = u.scoreHistory[i];
@@ -162,16 +211,20 @@ public class UserManager : MonoBehaviour
                 userList.Add(userData);
             }
             Debug.Log("[UserManager] " + userList.Count() + " usuarios cargados.");
+
+            // Sincronizar tabla hash al cargar
+            if (UserHashTable.Instance != null)
+                UserHashTable.Instance.Rebuild(userList.ToArray());
         }
     }
 
-    // ── Helper de debug: imprime el historial de la pila ─────────────────
+    // ── Debug: imprime historial de la pila ────────────────────────────────
     private void LogScoreHistory(UserData user)
     {
         if (user.scoreHistory == null || user.scoreHistory.IsEmpty()) return;
 
         System.Text.StringBuilder sb = new System.Text.StringBuilder();
-        sb.AppendLine($"[UserManager] Historial de partidas de {user.username} (tope primero):");
+        sb.AppendLine($"[UserManager] Historial de {user.username} (tope primero):");
 
         ScoreHistoryNode[] history = user.scoreHistory.ToArray();
         for (int i = 0; i < history.Length; i++)
@@ -180,7 +233,10 @@ public class UserManager : MonoBehaviour
         Debug.Log(sb.ToString());
     }
 
-    // ── Clases serializables para JsonUtility ─────────────────────────────
+    // ══════════════════════════════════════════════════════════════════════
+    // CLASES SERIALIZABLES
+    // ══════════════════════════════════════════════════════════════════════
+
     [System.Serializable]
     private class ScoreHistoryEntrySerializable
     {
@@ -200,14 +256,14 @@ public class UserManager : MonoBehaviour
     [System.Serializable]
     private class UserDataSerializable
     {
-        public string username;
-        public int    highScore;
-        public int    lastScore;
-        public int    gamesPlayed;
-        public string lastPlayed;
-        public int    globalScore;
+        public string                          username;
+        public int                             highScore;
+        public int                             lastScore;
+        public int                             gamesPlayed;
+        public string                          lastPlayed;
+        public int                             globalScore;
         public MiniGameRecordSerializable[]    miniGameRecords;
-        public ScoreHistoryEntrySerializable[] scoreHistory;   // pila serializada
+        public ScoreHistoryEntrySerializable[] scoreHistory;
     }
 
     [System.Serializable]
@@ -216,15 +272,14 @@ public class UserManager : MonoBehaviour
         public UserDataSerializable[] users;
     }
 
-    // ── Helper de serializacion ───────────────────────────────────────────
+    // ── Helper de serializacion ────────────────────────────────────────────
     private UserDataSerializable[] ToSerializableArray()
     {
         UserData[] arr    = userList.ToArray();
-        UserDataSerializable[] result = new UserDataSerializable[arr.Length];
+        var result        = new UserDataSerializable[arr.Length];
 
         for (int i = 0; i < arr.Length; i++)
         {
-            // Serializar registros de minijuegos
             var mgRecords = new MiniGameRecordSerializable[arr[i].miniGameRecords.Count];
             for (int j = 0; j < arr[i].miniGameRecords.Count; j++)
             {
@@ -236,7 +291,6 @@ public class UserManager : MonoBehaviour
                 };
             }
 
-            // Serializar la pila de historial (tope primero)
             ScoreHistoryEntrySerializable[] historyArr = null;
             if (arr[i].scoreHistory != null)
             {

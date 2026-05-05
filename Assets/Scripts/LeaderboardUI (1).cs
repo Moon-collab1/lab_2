@@ -35,7 +35,7 @@ public class LeaderboardUI : MonoBehaviour
             Debug.LogWarning("[Leaderboard] btnGlobal es NULL - no asignado en Inspector");
 
         if (btnMinijuego1 != null)
-            btnMinijuego1.onClick.AddListener(() => MostrarMinijuego(UserManager.MINIJUEGO_1));
+            btnMinijuego1.onClick.AddListener(() => MostrarMinijuego(UserManager.MINIJUEGO_1));// 
         else
             Debug.LogWarning("[Leaderboard] btnMinijuego1 es NULL - no asignado en Inspector");
 
@@ -106,7 +106,7 @@ public class LeaderboardUI : MonoBehaviour
         }
 
         foreach (Transform hijo in contenedor)
-            Destroy(hijo.gameObject);
+            Destroy(hijo.gameObject);// Limpia entradas anteriores para que siempre esten top 10
 
         if (usuarios == null || usuarios.Length == 0)
         {
@@ -117,13 +117,13 @@ public class LeaderboardUI : MonoBehaviour
 
         for (int i = 0; i < usuarios.Length; i++)
         {
-            int score = (modo == "global")
-                ? usuarios[i].globalScore
-                : usuarios[i].GetMiniGameScore(modo);
+            int score = (modo == "global")// el ? es para comparar si es el modo global o por minijuego
+                ? usuarios[i].globalScore// Si es global, muestra el globalScore
+                : usuarios[i].GetMiniGameScore(modo);// Si es por minijuego, muestra el score acumulado para ese minijuego
 
-            string linea = $"{i + 1}.  {usuarios[i].username}  —  {score} pts";
+            string linea = $"{i + 1}.  {usuarios[i].username}  —  {score} pts";// el $ es para usar interpolación de strings( las variables dentro de {} se convierten automáticamente a texto), lo que hace más fácil construir la linea con variables
             Debug.Log("[Leaderboard] Entrada: " + linea);
-            CrearEntrada(linea);
+            CrearEntrada(linea);// Crea una nueva entrada en el UI para cada usuario en el top, mostrando su posición, nombre y puntaje.
         }
     }
 
@@ -135,10 +135,10 @@ public class LeaderboardUI : MonoBehaviour
             return;
         }
 
-        GameObject entrada = Instantiate(entradaPrefab, contenedor);
-        TextMeshProUGUI tmp = entrada.GetComponentInChildren<TextMeshProUGUI>();
+        GameObject entrada = Instantiate(entradaPrefab, contenedor);// Crea una nueva instancia del prefab como hijo del contenedor
+        TextMeshProUGUI tmp = entrada.GetComponentInChildren<TextMeshProUGUI>();// Busca el componente de texto dentro del prefab para asignarle el texto de la entrada
         if (tmp != null)
-            tmp.text = texto;
+            tmp.text = texto;// Asigna el texto a mostrar en la entrada
         else
             Debug.LogWarning("[Leaderboard] El prefab no tiene TextMeshProUGUI");
     }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 // ══════════════════════════════════════════════════════════════════════════════
 // PILA MANUAL DE HISTORIAL DE SCORES
 // Estructura LIFO: el ultimo puntaje guardado es el primero en consultarse.
-// Implementada con nodos enlazados (sin usar Stack<T> de C#).
 // ══════════════════════════════════════════════════════════════════════════════
 public class ScoreHistoryNode
 {

@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     {
         currentHearts     = maxHearts;
         currentScore      = 0;
-        penaltyCoroutines = new Coroutine[watchedObjects.Length];
+        penaltyCoroutines = new Coroutine[watchedObjects.Length]; // Crea el arreglo vacío
 
         UpdateHeartsUI();
         UpdateScoreUI();
@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < watchedObjects.Length; i++)
             if (watchedObjects[i] != null)
-                watchedObjects[i].OnStartedFacingPlayer += HandleObjectFacingPlayer;
+                watchedObjects[i].OnStartedFacingPlayer += HandleObjectFacingPlayer; //cuando empieces a mirar al jugador, avísale a HandleObjectFacingPlayer
 
         if (restartButton != null)
             restartButton.onClick.AddListener(RestartGame);
@@ -57,14 +57,14 @@ public class GameManager : MonoBehaviour
         if (nextSceneButton != null)
             nextSceneButton.onClick.AddListener(GoToNextScene);
 
-        StartCoroutine(ScoreIncrement());
+        StartCoroutine(ScoreIncrement());//inicia la funcion que aumenta el score cada segundo
     }
 
     void OnDestroy()
     {
         for (int i = 0; i < watchedObjects.Length; i++)
             if (watchedObjects[i] != null)
-                watchedObjects[i].OnStartedFacingPlayer -= HandleObjectFacingPlayer;
+                watchedObjects[i].OnStartedFacingPlayer -= HandleObjectFacingPlayer;// Limpia los eventos para evitar errores si el GameManager se destruye antes que los objetos vigilados, esto por hacer cambio de escena
     }
 
     // ── Cuando un objeto empieza a mirarte ────────────────────────────────
@@ -72,13 +72,13 @@ public class GameManager : MonoBehaviour
     {
         if (isGameOver) return;
 
-        SetStatus("! Te esta mirando! Haz clic en el boton!");
+        SetStatus("! Te esta mirando! Haz clic en el Oso!");
 
         for (int i = 0; i < watchedObjects.Length; i++)
         {
             if (watchedObjects[i] != null && watchedObjects[i].isFacingPlayer)
                 if (penaltyCoroutines[i] == null)
-                    penaltyCoroutines[i] = StartCoroutine(PenaltyCountdown(i));
+                    penaltyCoroutines[i] = StartCoroutine(PenaltyCountdown(i));//Si no hay ya una cuenta regresiva corriendo para ese objeto, inicia una nueva.
         }
     }
 
@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
             if (penaltyCoroutines[i] != null)
             {
                 StopCoroutine(penaltyCoroutines[i]);
-                penaltyCoroutines[i] = null;
+                penaltyCoroutines[i] = null;//Detiene la cuenta regresiva si el jugador reacciono a tiempo
             }
         }
 
@@ -102,14 +102,14 @@ public class GameManager : MonoBehaviour
     // ── Cuenta regresiva: quita corazon cada segundo mientras te mira ──────
     IEnumerator PenaltyCountdown(int objectIndex)
     {
-        yield return new WaitForSeconds(lookTimer);
+        yield return new WaitForSeconds(lookTimer);//Espera el tiempo definido(3 seg) antes de empezar a quitar corazones
 
         while (!isGameOver
                && watchedObjects[objectIndex] != null
                && watchedObjects[objectIndex].isFacingPlayer)
         {
             LoseHeart();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(3f);//Después de perder un corazón, espera otros 3 segundos antes de quitar otro, siempre y cuando el objeto siga mirándote
         }
 
         penaltyCoroutines[objectIndex] = null;
@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour
     // ── Logica de corazones ───────────────────────────────────────────────
     void LoseHeart()
     {
-        currentHearts = Mathf.Max(0, currentHearts - 1);
+        currentHearts = Mathf.Max(0, currentHearts - 1);// Reduce el número de corazones, pero el Mathf no permite que sea menos de 0
         UpdateHeartsUI();
         SetStatus("Perdiste un corazon! Te quedan " + currentHearts + ".");
 
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         isGameOver = true;
-        Time.timeScale = 0f;
+        Time.timeScale = 0f;// Detiene el tiempo para congelar el juego
         SetStatus("FIN DEL JUEGO");
 
         // ★ Guardar score automaticamente en el perfil del usuario activo
@@ -173,7 +173,7 @@ public class GameManager : MonoBehaviour
     void RestartGame()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);// Recarga la escena actual para reiniciar el juego
     }
 
     void GoToNextScene()

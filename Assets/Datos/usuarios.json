@@ -1,0 +1,204 @@
+{
+    "users": [
+        {
+            "username": "Samuel",
+            "highScore": 55,
+            "lastScore": 5,
+            "gamesPlayed": 12,
+            "lastPlayed": "2026-04-29 03:19",
+            "globalScore": 182,
+            "miniGameRecords": [
+                {
+                    "minigameName": "Minijuego1",
+                    "accumulatedScore": 182,
+                    "timesPlayed": 12
+                }
+            ],
+            "scoreHistory": [
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 03:19"
+                },
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 03:12"
+                },
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-28 23:57"
+                },
+                {
+                    "score": 43,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-28 23:57"
+                },
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-28 15:58"
+                },
+                {
+                    "score": 17,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-28 15:58"
+                }
+            ]
+        },
+        {
+            "username": "Daniel",
+            "highScore": 19,
+            "lastScore": 19,
+            "gamesPlayed": 3,
+            "lastPlayed": "2026-04-27 10:15",
+            "globalScore": 25,
+            "miniGameRecords": [
+                {
+                    "minigameName": "Minijuego1",
+                    "accumulatedScore": 25,
+                    "timesPlayed": 3
+                }
+            ],
+            "scoreHistory": []
+        },
+        {
+            "username": "Mathias",
+            "highScore": 0,
+            "lastScore": 0,
+            "gamesPlayed": 0,
+            "lastPlayed": "2026-04-27 10:56",
+            "globalScore": 0,
+            "miniGameRecords": [],
+            "scoreHistory": []
+        },
+        {
+            "username": "Sam",
+            "highScore": 53,
+            "lastScore": 5,
+            "gamesPlayed": 13,
+            "lastPlayed": "2026-05-05 15:48",
+            "globalScore": 213,
+            "miniGameRecords": [
+                {
+                    "minigameName": "Minijuego1",
+                    "accumulatedScore": 213,
+                    "timesPlayed": 13
+                }
+            ],
+            "scoreHistory": [
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-05-05 15:48"
+                },
+                {
+                    "score": 19,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-05-05 15:40"
+                },
+                {
+                    "score": 53,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-05-05 15:39"
+                },
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 11:43"
+                },
+                {
+                    "score": 21,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 11:43"
+                },
+                {
+                    "score": 9,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 11:30"
+                },
+                {
+                    "score": 41,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 11:30"
+                },
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 03:27"
+                },
+                {
+                    "score": 5,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-29 03:13"
+                }
+            ]
+        },
+        {
+            "username": "usuario 1",
+            "highScore": 17,
+            "lastScore": 17,
+            "gamesPlayed": 1,
+            "lastPlayed": "2026-04-27 14:26",
+            "globalScore": 17,
+            "miniGameRecords": [
+                {
+                    "minigameName": "Minijuego1",
+                    "accumulatedScore": 17,
+                    "timesPlayed": 1
+                }
+            ],
+            "scoreHistory": []
+        },
+        {
+            "username": "Sarah",
+            "highScore": 17,
+            "lastScore": 13,
+            "gamesPlayed": 2,
+            "lastPlayed": "2026-04-28 19:34",
+            "globalScore": 30,
+            "miniGameRecords": [
+                {
+                    "minigameName": "Minijuego1",
+                    "accumulatedScore": 30,
+                    "timesPlayed": 2
+                }
+            ],
+            "scoreHistory": [
+                {
+                    "score": 13,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-28 19:34"
+                },
+                {
+                    "score": 17,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-04-28 19:34"
+                }
+            ]
+        },
+        {
+            "username": "Dan",
+            "highScore": 41,
+            "lastScore": 41,
+            "gamesPlayed": 1,
+            "lastPlayed": "2026-05-05 15:58",
+            "globalScore": 41,
+            "miniGameRecords": [
+                {
+                    "minigameName": "Minijuego1",
+                    "accumulatedScore": 41,
+                    "timesPlayed": 1
+                }
+            ],
+            "scoreHistory": [
+                {
+                    "score": 41,
+                    "minigameName": "Minijuego1",
+                    "date": "2026-05-05 15:58"
+                }
+            ]
+        }
+    ]
+}
